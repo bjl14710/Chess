@@ -37,8 +37,8 @@ class Chess:
     def movePawn(self, select, move, color) -> bool:
         # determine specific pawn.
         ROWS, COLS = len(self.board), len(self.board[0])
-        black_directions = {"forward": (1,0), "back": (-1,0), "left":(0,-1),"right":(1,0)}
-        red_directions = {"forward": (-1,0), "back": (1,0), "left":(0,1),"right":(-1,0)}
+        red_directions = {"forward": (1,0), "back": (-1,0), "left":(0,-1),"right":(1,0)}
+        black_directions = {"forward": (-1,0), "back": (1,0), "left":(0,1),"right":(-1,0)}
         r,c = self.findPiece("pawn",color,select)
         print(r,c)
         if r == -1 and c == -1:
