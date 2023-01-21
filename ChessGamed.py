@@ -10,14 +10,14 @@ class Chess:
         6 = King
         '''
         self.board = [
-                      [(3,"red",0),(2,"red",0),(4,"red",0),(6,"red",0),(5,"red",0),(4,"red",1),(2,"red",1),(3,"red",1)]
-                      [(1,"red",0),(1,"red",1),(1,"red",2),(1,"red",3),(1,"red",4),(1,"red",5),(1,"red",6),(1,"red",7)]
-                      [(0,"",0),(0,"",0),(0,"",0),(0,"",0),(0,"",0),(0,"",0),(0,"",0),(0,"",0)]
-                      [(0,"",0),(0,"",0),(0,"",0),(0,"",0),(0,"",0),(0,"",0),(0,"",0),(0,"",0)]
-                      [(0,"",0),(0,"",0),(0,"",0),(0,"",0),(0,"",0),(0,"",0),(0,"",0),(0,"",0)]
-                      [(0,"",0),(0,"",0),(0,"",0),(0,"",0),(0,"",0),(0,"",0),(0,"",0),(0,"",0)]
-                      [(1,"black",0),(1,"black",1),(1,"black",2),(1,"black",3),(1,"black",5),(1,"black",6),(1,"black",7),(1,"black")]
-                      [(3,"black",0),(2,"black",0),(4,"black",0),(6,"black",0),(5,"black",0),(4,"black",1),(2,"black",1),(3,"black",1)]
+                      [[3,"red",0],[2,"red",0],[4,"red",0],[6,"red",0],[5,"red",0],[4,"red",1],[2,"red",1],[3,"red",1]],
+                      [[1,"red",0],[1,"red",1],[1,"red",2],[1,"red",3],[1,"red",4],[1,"red",5],[1,"red",6],[1,"red",7]],
+                      [[0,"",0],[0,"",0],[0,"",0],[0,"",0],[0,"",0],[0,"",0],[0,"",0],[0,"",0]],
+                      [[0,"",0],[0,"",0],[0,"",0],[0,"",0],[0,"",0],[0,"",0],[0,"",0],[0,"",0]],
+                      [[0,"",0],[0,"",0],[0,"",0],[0,"",0],[0,"",0],[0,"",0],[0,"",0],[0,"",0]],
+                      [[0,"",0],[0,"",0],[0,"",0],[0,"",0],[0,"",0],[0,"",0],[0,"",0],[0,"",0]],
+                      [[1,"black",0],[1,"black",1],[1,"black",2],[1,"black",3],[1,"black",4],[1,"black",5],[1,"black",6],[1,"black",7]],
+                      [[3,"black",0],[2,"black",0],[4,"black",0],[6,"black",0],[5,"black",0],[4,"black",1],[2,"black",1],[3,"black",1]]
                       ] 
         # select the type
         self.Type = {"pawn":1, "knight":2, "rook":3, "bishop":4, "Queen":5, "King":6}
@@ -40,6 +40,7 @@ class Chess:
         black_directions = {"forward": (1,0), "back": (-1,0), "left":(0,-1),"right":(1,0)}
         red_directions = {"forward": (-1,0), "back": (1,0), "left":(0,1),"right":(-1,0)}
         r,c = self.findPiece("pawn",color,select)
+        print(r,c)
         if r == -1 and c == -1:
             print("piece not found")
             return 
@@ -84,16 +85,17 @@ class Chess:
     
     def moveRook(self):
         return
-
+    def printBoard(self):
+        for r in range(self.rows):
+            print(self.board[r])
+    
 if __name__ == "__main__":
     Game = Chess()
     # specific pawn, move desired, color
+    Game.printBoard()
     Game.movePawn(0,"forward","black")
-    Game.movePawn(0,"back","black")
-    Game.movePawn(0,"back","black")
-    Game.movePawn(0,"forward","black")
-    for r in range(8):
-        Game.movePawn(0,"right","black")
+    
+    Game.printBoard()
     
     
 
