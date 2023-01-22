@@ -57,7 +57,7 @@ class Chess:
             # use red directions
         else:
             print("not found")
-            return
+            return False
         # make the move This should be it's own function since it will be used a lot.
         if (Row not in range(ROWS) or 
             Col not in range(COLS) or 
@@ -65,10 +65,11 @@ class Chess:
             # non legal move,
             # must be in range, and cannot be the same type of color as the original.
             print("move not legal")
-            return
+            return False
         # else, let's modify the board to put the pawn there
         # this swap should be too.
         self.swap(r,c,Row,Col)
+        return [Row,Col]
         
     def moveBishop(self):
         return
@@ -83,6 +84,7 @@ class Chess:
         return
     
     def moveRook(self,direction,move,color,select):
+        # we return False if there is no way we can swap, else we return the final position
         notColor = color
         red_directions = {"forward": (1,0), "back": (-1,0), "left":(0,1),"right":(0,-1)}
         black_directions = {"forward": (-1,0), "back": (1,0), "left":(0,-1),"right":(0,1)}
@@ -97,21 +99,24 @@ class Chess:
         
         def DFSMove(r,c,movesLeft):
             nonlocal dr, dc, notColor, row, col
-            if movesLeft == 0:
-                self.swap(row,col,r,c)
-                return True
             if (r not in range(self.rows) or c not in range(self.cols)
                 or (self.board[r][c][1] == color and (r != row or c != col))):
                 print("move not legal")
                 # can't kill our own pieces or move outside of the board
                 return False
+            if movesLeft == 0:
+                self.swap(row,col,r,c)
+                return [r,c]
             if (self.board[r][c][1] == notColor):
                 # we killed a piece
                 self.swap(row,col,r,c)
-                return False
-            DFSMove(r+dr,c+dc,movesLeft-1)
+                return [r,c]
+            res = DFSMove(r+dr,c+dc,movesLeft-1)
+            if res:
+                return res
         # we reached the end
-        DFSMove(row,col,move)
+        return DFSMove(row,col,move)
+
 
     def swap(self,oR,oC,nR,nC):
         temp = self.board[oR][oC]
@@ -122,20 +127,78 @@ class Chess:
         for r in range(self.rows):
             print(self.board[r])
     
+    def findPossibleSpots(self,piece,color,select):
+        #def findPiece(self,piece,color,number):
+        copy = self.board
+        r,c = self.findPiece(piece,color,select)    
+        spots = []
+        visited = set()
+        def backtracking(r,c,action):
+            nonlocal spots
+            if ((r,c) in visited):
+                return 
+            visited.add((r,c))
+            if action == "rook":
+                directions = ["forward","back","left","right"]
+                for direction in directions:
+                    for dist in range(1,8):
+                        # check all 4 directions, recurse to check after that too. then 
+                        pos = self.moveRook(direction,dist,color,select)
+                        if not pos:
+                            # we continue because we hit a wall and there is no way we can 
+                            # keep going from there.
+                            break
+                        spots.append(pos)
+                        backtracking(dist,c,action)
+        if r != -1 or c != -1:
+            backtracking(r,c,piece)
+            self.board = copy
+            if not spots:
+                return []
+            return self.removeDuplicates(spots)
+            # we found the piece
+    def removeDuplicates(self,arr):
+        arr.sort()
+        index = 1
+        Size = len(arr)
+        stack = [arr[0]]
+        while index < Size:
+            stack.append(arr[index])
+            if stack[-2] == stack[-1]:
+                stack.pop()
+            index += 1
+        return stack
+
 if __name__ == "__main__":
     Game = Chess()
     # specific pawn, move desired, color
     Game.printBoard()
-    Game.movePawn(0,"forward","red")
-    Game.movePawn(0,"left","red")
-    Game.movePawn(1,"forward","black")
-    Game.movePawn(1,"forward","black")
-    Game.moveRook("forward",4,"red",0)
+    # Game.movePawn(0,"forward","red")
+    # Game.movePawn(0,"left","red")
+    # Game.movePawn(1,"forward","black")
+    # Game.movePawn(1,"forward","black")
+    # Game.moveRook("forward",4,"red",0,True)
+    # should return Null
+    # good, can't do any moves no spots
+    print(Game.findPossibleSpots("rook","black",1))
+    # move pawn out of the way
+    Game.movePawn(7,"forward","black")
+    Game.movePawn(7,"left","black")
+    Game.moveRook("forward",4,"black",1)
+    Game.moveRook("left",4,"black",1)
+    print(Game.findPiece("rook","black",1))
+    #def findPiece(self,piece,color,number):
+    
+    print()
+    print()
+    print()
+    print(Game.findPossibleSpots("rook","black",1))
     print()
     print()
     print()
     # movePawn(self, select, move, color)
     # moveRook(self,direction,move,color,select)
+    # def findPossibleSpots(self,piece,color,select):s
     Game.printBoard()
     
     
